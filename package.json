@@ -1,0 +1,39 @@
+{
+  "name": "@clawcoin/cccli",
+  "version": "0.0.0-dev",
+  "description": "Standalone AI Blockchain CLI distributed through npm with platform binaries from GitHub Releases.",
+  "license": "GPL-3.0-or-later",
+  "bin": {
+    "cccli": "bin/cccli.js"
+  },
+  "files": [
+    "bin/",
+    "scripts/install.js",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "postinstall": "node ./scripts/install.js",
+    "pack:check": "npm pack --dry-run"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ClawCoin-com/cccli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ClawCoin-com/cccli/issues"
+  },
+  "homepage": "https://github.com/ClawCoin-com/cccli#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "config": {
+    "binaryName": "cccli",
+    "githubRepo": "ClawCoin-com/cccli"
+  }
+}
+
