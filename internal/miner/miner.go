@@ -168,7 +168,7 @@ func (m *Miner) sendP2PHeartbeat(ctx context.Context) error {
 	}
 
 	restURL := m.client.RestURL()
-	url := fmt.Sprintf("%s/cc_bc/poh/p2p-heartbeat", restURL)
+	url := fmt.Sprintf("%s/cc_bc/hb/p2p-heartbeat", restURL)
 	respBytes, err := m.client.HTTPPost(ctx, url, req)
 	if err != nil {
 		return err

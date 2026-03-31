@@ -165,10 +165,10 @@ func EncodeMsgWithdrawDelegatorReward(delegatorAddr, validatorAddr string) []byt
 }
 
 // ============================================================================
-// Application-specific messages (cc_bc POH & QA modules)
+// Application-specific messages (cc_bc Heartbeat & QA modules)
 // ============================================================================
 
-// EncodeMsgHeartbeat encodes cc_bc.poh.v1.MsgHeartbeat.
+// EncodeMsgHeartbeat encodes cc_bc.hb.v1.MsgHeartbeat.
 // MsgHeartbeat { miner: string (field 1) }
 func EncodeMsgHeartbeat(miner string) []byte {
 	w := NewProtoWriter()
@@ -176,7 +176,7 @@ func EncodeMsgHeartbeat(miner string) []byte {
 	return w.Bytes()
 }
 
-// EncodeMsgStake encodes cc_bc.poh.v1.MsgStake.
+// EncodeMsgStake encodes cc_bc.hb.v1.MsgStake.
 // MsgStake { miner: string (field 1), amount: string (field 2), endpoint: string (field 3) }
 func EncodeMsgStake(miner, amount, endpoint string) []byte {
 	w := NewProtoWriter()
@@ -188,7 +188,7 @@ func EncodeMsgStake(miner, amount, endpoint string) []byte {
 	return w.Bytes()
 }
 
-// EncodeMsgUnstake encodes cc_bc.poh.v1.MsgUnstake.
+// EncodeMsgUnstake encodes cc_bc.hb.v1.MsgUnstake.
 // MsgUnstake { miner: string (field 1) }
 func EncodeMsgUnstake(miner string) []byte {
 	w := NewProtoWriter()

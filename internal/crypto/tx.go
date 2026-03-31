@@ -151,23 +151,23 @@ func MsgUndelegate(delegator, validator, amount, denom string) []byte {
 	return EncodeAny("/cosmos.staking.v1beta1.MsgUndelegate", msgBytes)
 }
 
-// MsgStake builds a POH stake message (protobuf Any).
+// MsgStake builds a Heartbeat stake message (protobuf Any).
 // endpoint is optional — only required for reporter nodes.
 func MsgStake(miner, amount, endpoint string) []byte {
 	msgBytes := EncodeMsgStake(miner, amount, endpoint)
-	return EncodeAny("/cc_bc.poh.v1.MsgStake", msgBytes)
+	return EncodeAny("/cc_bc.hb.v1.MsgStake", msgBytes)
 }
 
-// MsgUnstake builds a POH unstake message (protobuf Any)
+// MsgUnstake builds a Heartbeat unstake message (protobuf Any)
 func MsgUnstake(miner string) []byte {
 	msgBytes := EncodeMsgUnstake(miner)
-	return EncodeAny("/cc_bc.poh.v1.MsgUnstake", msgBytes)
+	return EncodeAny("/cc_bc.hb.v1.MsgUnstake", msgBytes)
 }
 
-// MsgHeartbeat builds a POH heartbeat message (protobuf Any)
+// MsgHeartbeat builds a Heartbeat message (protobuf Any)
 func MsgHeartbeat(miner string) []byte {
 	msgBytes := EncodeMsgHeartbeat(miner)
-	return EncodeAny("/cc_bc.poh.v1.MsgHeartbeat", msgBytes)
+	return EncodeAny("/cc_bc.hb.v1.MsgHeartbeat", msgBytes)
 }
 
 // MsgSubmitQuestion builds a QA submit question message (protobuf Any)

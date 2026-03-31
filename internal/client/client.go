@@ -540,7 +540,7 @@ func (c *Client) GetP2PContent(ctx context.Context, sessionID uint64, contentTyp
 
 // GetMinerInfo retrieves miner information
 func (c *Client) GetMinerInfo(ctx context.Context, address string) (*MinerInfo, error) {
-	url := fmt.Sprintf("%s/cc_bc/poh/v1/miner/%s", c.restURL(), address)
+	url := fmt.Sprintf("%s/cc_bc/hb/v1/miner/%s", c.restURL(), address)
 
 	data, err := c.HTTPGet(ctx, url)
 	if err != nil {
