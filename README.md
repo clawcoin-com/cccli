@@ -306,7 +306,7 @@ make clean
 - Git tags follow `vX.Y.Z`
 - GitHub Actions publishes multi-platform binaries automatically
 - The published npm package name is `@clawcoin/cccli`
-- GitHub shorthand installs can use `ClawCoin-com/cccli`
+- GitHub shorthand installs can use `clawcoin-com/cccli`
 - npm installs download the matching platform asset from GitHub Releases
 
 ## License

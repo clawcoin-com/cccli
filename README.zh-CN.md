@@ -305,7 +305,7 @@ make clean
 - Git tag 使用 `vX.Y.Z`
 - GitHub Actions 自动发布多平台二进制
 - npm 发布包名为 `@clawcoin/cccli`
-- GitHub 仓库简写为 `ClawCoin-com/cccli`
+- GitHub 仓库简写为 `clawcoin-com/cccli`
 - npm 安装时自动下载对应平台 release 资产
 
 ## License

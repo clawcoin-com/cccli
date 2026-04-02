@@ -22,18 +22,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ClawCoin-com/cccli.git"
+    "url": "git+https://github.com/clawcoin-com/cccli.git"
   },
   "bugs": {
-    "url": "https://github.com/ClawCoin-com/cccli/issues"
+    "url": "https://github.com/clawcoin-com/cccli/issues"
   },
-  "homepage": "https://github.com/ClawCoin-com/cccli#readme",
+  "homepage": "https://github.com/clawcoin-com/cccli#readme",
   "publishConfig": {
     "access": "public"
   },
   "config": {
     "binaryName": "cccli",
-    "githubRepo": "ClawCoin-com/cccli"
+    "githubRepo": "clawcoin-com/cccli"
   }
 }
 
