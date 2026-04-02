@@ -168,7 +168,7 @@ func (m *Miner) sendP2PHeartbeat(ctx context.Context) error {
 	}
 
 	restURL := m.client.RestURL()
-	url := fmt.Sprintf("%s/cc_bc/hb/p2p-heartbeat", restURL)
+	url := fmt.Sprintf("%s/cc_bc/v1/hb/p2p_heartbeat", restURL)
 	respBytes, err := m.client.HTTPPost(ctx, url, req)
 	if err != nil {
 		return err
@@ -326,7 +326,7 @@ type Session struct {
 	TopicDescription   string   `json:"topic_description"`
 }
 
-// GetSessions retrieves QA sessions for this miner via /cc_bc/qa/v1/my-sessions.
+// GetSessions retrieves QA sessions for this miner via /cc_bc/v1/qa/my_sessions.
 func (m *Miner) GetSessions(ctx context.Context) ([]Session, error) {
 	clientSessions, err := m.client.GetMySessions(ctx, m.address)
 	if err != nil {
@@ -545,7 +545,7 @@ func (m *Miner) PostContent(ctx context.Context, sessionID uint64, contentType, 
 	}
 
 	restURL := m.client.RestURL()
-	url := fmt.Sprintf("%s/cc_bc/qa/p2p-content", restURL)
+	url := fmt.Sprintf("%s/cc_bc/v1/qa/p2p_content", restURL)
 	respBytes, err := m.client.HTTPPost(ctx, url, req)
 	if err != nil {
 		return fmt.Errorf("post p2p content: %w", err)
@@ -574,7 +574,7 @@ func (m *Miner) GetSubmissions(ctx context.Context, sessionID uint64, subType st
 // contentType must be "question" or "answer".
 func (m *Miner) GetContent(ctx context.Context, sessionID uint64, contentType string) ([]ContentItem, error) {
 	restURL := m.client.RestURL()
-	url := fmt.Sprintf("%s/cc_bc/qa/p2p-content/%d?type=%s", restURL, sessionID, contentType)
+	url := fmt.Sprintf("%s/cc_bc/v1/qa/p2p_content/%d?type=%s", restURL, sessionID, contentType)
 	data, err := m.client.HTTPGet(ctx, url)
 	if err != nil {
 		return nil, fmt.Errorf("get p2p content: %w", err)
@@ -793,4 +793,3 @@ func isAlreadySubmittedError(rawLog string) bool {
 		strings.Contains(lower, "already committed") ||
 		strings.Contains(lower, "already revealed")
 }
-

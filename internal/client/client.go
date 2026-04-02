@@ -414,7 +414,7 @@ type Balance struct {
 
 // GetActiveSessions retrieves all active QA sessions (used by `miner sessions` command).
 func (c *Client) GetActiveSessions(ctx context.Context) ([]Session, error) {
-	url := fmt.Sprintf("%s/cc_bc/qa/v1/sessions", c.restURL())
+	url := fmt.Sprintf("%s/cc_bc/v1/qa/sessions", c.restURL())
 
 	data, err := c.HTTPGet(ctx, url)
 	if err != nil {
@@ -432,9 +432,9 @@ func (c *Client) GetActiveSessions(ctx context.Context) ([]Session, error) {
 }
 
 // GetMySessions retrieves QA sessions for a specific participant (server-side filtered).
-// Uses /cc_bc/qa/v1/my_sessions/{participant} with a 5-second LRU cache on the server.
+// Uses /cc_bc/v1/qa/my_sessions/{participant} with a 5-second LRU cache on the server.
 func (c *Client) GetMySessions(ctx context.Context, participant string) ([]Session, error) {
-	url := fmt.Sprintf("%s/cc_bc/qa/v1/my_sessions/%s", c.restURL(), participant)
+	url := fmt.Sprintf("%s/cc_bc/v1/qa/my_sessions/%s", c.restURL(), participant)
 
 	data, err := c.HTTPGet(ctx, url)
 	if err != nil {
@@ -477,7 +477,7 @@ type SubmissionEntry struct {
 // GetSubmissions queries on-chain submissions for a session.
 // subType must be "question" or "answer".
 func (c *Client) GetSubmissions(ctx context.Context, sessionID uint64, subType string) ([]SubmissionEntry, error) {
-	url := fmt.Sprintf("%s/cc_bc/qa/v1/submissions/%d/%s", c.restURL(), sessionID, subType)
+	url := fmt.Sprintf("%s/cc_bc/v1/qa/submissions/%d/%s", c.restURL(), sessionID, subType)
 
 	data, err := c.HTTPGet(ctx, url)
 	if err != nil {
@@ -503,7 +503,7 @@ type ContentItem struct {
 
 // PostP2PContent submits content to the P2P content cache.
 func (c *Client) PostP2PContent(ctx context.Context, req interface{}) error {
-	url := fmt.Sprintf("%s/cc_bc/qa/p2p-content", c.restURL())
+	url := fmt.Sprintf("%s/cc_bc/v1/qa/p2p_content", c.restURL())
 	data, err := c.HTTPPost(ctx, url, req)
 	if err != nil {
 		return fmt.Errorf("failed to post p2p content: %w", err)
@@ -525,7 +525,7 @@ func (c *Client) PostP2PContent(ctx context.Context, req interface{}) error {
 // GetP2PContent retrieves content from the P2P content cache for a session.
 // contentType must be "question" or "answer".
 func (c *Client) GetP2PContent(ctx context.Context, sessionID uint64, contentType string) ([]ContentItem, error) {
-	url := fmt.Sprintf("%s/cc_bc/qa/p2p-content/%d?type=%s", c.restURL(), sessionID, contentType)
+	url := fmt.Sprintf("%s/cc_bc/v1/qa/p2p_content/%d?type=%s", c.restURL(), sessionID, contentType)
 	data, err := c.HTTPGet(ctx, url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get p2p content: %w", err)
@@ -536,33 +536,6 @@ func (c *Client) GetP2PContent(ctx context.Context, sessionID uint64, contentTyp
 		return nil, fmt.Errorf("failed to parse content items: %w", err)
 	}
 	return items, nil
-}
-
-// GetMinerInfo retrieves miner information
-func (c *Client) GetMinerInfo(ctx context.Context, address string) (*MinerInfo, error) {
-	url := fmt.Sprintf("%s/cc_bc/hb/v1/miner/%s", c.restURL(), address)
-
-	data, err := c.HTTPGet(ctx, url)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get miner info: %w", err)
-	}
-
-	var resp struct {
-		Miner MinerInfo `json:"miner"`
-	}
-	if err := json.Unmarshal(data, &resp); err != nil {
-		return nil, fmt.Errorf("failed to parse miner info: %w", err)
-	}
-
-	return &resp.Miner, nil
-}
-
-// MinerInfo represents miner information
-type MinerInfo struct {
-	Address       string `json:"address"`
-	Stake         string `json:"stake"`
-	LastHeartbeat string `json:"last_heartbeat"`
-	IsActive      bool   `json:"is_active"`
 }
 
 // Validator represents a staking validator
