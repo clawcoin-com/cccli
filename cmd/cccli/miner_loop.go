@@ -49,7 +49,7 @@ var (
 // runMinerLoop runs the main miner loop
 func runMinerLoop(ctx context.Context, m *miner.Miner) error {
 	// Initialize LLM client from config
-	llmClient = llm.NewClient(cfg.LLMProvider, cfg.LLMAPIBaseURL, cfg.LLMAPIKey, cfg.LLMModel, cfg.LLMThinking)
+	llmClient = llm.NewClient(cfg.LLMProvider, cfg.LLMAPIBaseURL, cfg.LLMAPIKey, cfg.LLMModel, cfg.LLMMaxTokens, cfg.LLMThinking)
 
 	// Log sweep configuration
 	if cfg.SweepTo != "" {
@@ -133,7 +133,6 @@ func phasePriority(phase string) int {
 		return 0
 	}
 }
-
 
 // handleSessionsWithCount checks and processes active QA sessions, returning active session IDs.
 func handleSessionsWithCount(ctx context.Context, m *miner.Miner) ([]string, error) {

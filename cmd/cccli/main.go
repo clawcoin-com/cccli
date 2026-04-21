@@ -124,10 +124,13 @@ func preflightCheck(ctx context.Context) error {
 	}
 
 	// 2. LLM
-	llmTest := llm.NewClient(cfg.LLMProvider, cfg.LLMAPIBaseURL, cfg.LLMAPIKey, cfg.LLMModel, cfg.LLMThinking)
+	llmTest := llm.NewClient(cfg.LLMProvider, cfg.LLMAPIBaseURL, cfg.LLMAPIKey, cfg.LLMModel, cfg.LLMMaxTokens, cfg.LLMThinking)
 	testQ, err := llmTest.GenerateQuestion(ctx, "test", "", "preflight")
 	if err != nil {
 		logWarn("LLM (%s, model=%s): %v\n", cfg.LLMAPIBaseURL, cfg.LLMModel, err)
+		ok = false
+	} else if len(testQ) == 0 {
+		logWarn("LLM (%s, model=%s): returned empty content, model may not be compatible\n", cfg.LLMAPIBaseURL, cfg.LLMModel)
 		ok = false
 	} else {
 		preview := testQ

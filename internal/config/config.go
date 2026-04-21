@@ -26,7 +26,8 @@ type Config struct {
 	LLMAPIBaseURL string `mapstructure:"llm_api_base_url"`
 	LLMAPIKey     string `mapstructure:"llm_api_key"`
 	LLMModel      string `mapstructure:"llm_model"`
-	LLMThinking   bool   `mapstructure:"llm_thinking"` // enable thinking/reasoning mode (default false)
+	LLMMaxTokens  int    `mapstructure:"llm_max_tokens"` // max tokens for LLM response (default 4096)
+	LLMThinking   bool   `mapstructure:"llm_thinking"`   // enable thinking/reasoning mode (default false)
 
 	// Transaction configuration
 	Gas      uint64 `mapstructure:"gas"`
@@ -59,6 +60,7 @@ func DefaultConfig() *Config {
 		LLMAPIBaseURL:     "http://localhost:4000/v1",
 		LLMAPIKey:         "",
 		LLMModel:          "gpt-4",
+		LLMMaxTokens:      4096,
 
 		Gas:      200000,
 		GasPrice: "100000000",
@@ -139,6 +141,7 @@ func (c *Config) Save(path string) error {
 	savedKey := viper.GetString("llm_api_key")
 	viper.Set("llm_api_key", "")
 	viper.Set("llm_model", c.LLMModel)
+	viper.Set("llm_max_tokens", c.LLMMaxTokens)
 	viper.Set("llm_thinking", c.LLMThinking)
 	viper.Set("gas", c.Gas)
 	viper.Set("gas_price", c.GasPrice)

@@ -35,7 +35,7 @@ type Client struct {
 // NewClient creates a new LLM client.
 // provider: "openai" (default) or "anthropic"
 // thinking: enable thinking/reasoning mode (e.g., Qwen3 <think> tags). Default false for faster responses.
-func NewClient(provider, baseURL, apiKey, model string, thinking bool) *Client {
+func NewClient(provider, baseURL, apiKey, model string, maxTokens int, thinking bool) *Client {
 	provider = strings.ToLower(strings.TrimSpace(provider))
 	if provider == "" {
 		provider = ProviderOpenAI
@@ -63,7 +63,7 @@ func NewClient(provider, baseURL, apiKey, model string, thinking bool) *Client {
 		baseURL:     strings.TrimRight(baseURL, "/"),
 		apiKey:      apiKey,
 		model:       model,
-		maxTokens:   1024,
+		maxTokens:   maxTokens,
 		temperature: 0.7,
 		thinking:    thinking,
 		httpClient: &http.Client{
@@ -206,7 +206,11 @@ func (c *Client) completeOpenAI(ctx context.Context, systemPrompt, userPrompt st
 		return "", fmt.Errorf("no response from LLM")
 	}
 
-	return stripThinkTags(chatResp.Choices[0].Message.Content), nil
+	content := chatResp.Choices[0].Message.Content
+	if content == "" {
+		return "", fmt.Errorf("LLM returned empty content (model may need more max_tokens or does not support non-thinking mode)")
+	}
+	return stripThinkTags(content), nil
 }
 
 // ---------- Anthropic implementation ----------
