@@ -43,6 +43,7 @@ const (
 type Key struct {
 	Name       string `json:"name"`
 	Address    string `json:"address"`
+	EVMAddress string `json:"evm_address,omitempty"` // EVM hex address (0x...), derived from the same 20 bytes
 	PubKeyHex  string `json:"pubkey_hex"`
 	PrivKeyEnc string `json:"privkey_enc,omitempty"` // Encrypted private key (hex)
 	Salt       string `json:"salt,omitempty"`        // PBKDF2 salt (hex)
@@ -137,27 +138,29 @@ func DeriveKeyFromMnemonic(mnemonic string, index uint32, force ...bool) (*secp2
 	return privKey, nil
 }
 
-// PubKeyToAddress converts a secp256k1 public key to a bech32 address (EVM/Ethereum style).
+// PubKeyToAddressBytes returns the 20-byte Ethereum-style address bytes from a secp256k1 public key.
 // Uses keccak256(uncompressed_pubkey[1:])[-20:] — matches ethsecp256k1 address derivation.
-func PubKeyToAddress(pubKey *secp256k1.PublicKey, prefix string) (string, error) {
-	// Get uncompressed public key bytes (65 bytes: 04 || x || y)
+func PubKeyToAddressBytes(pubKey *secp256k1.PublicKey) []byte {
 	uncompressed := pubKey.SerializeUncompressed()
-
-	// keccak256 of x||y (skip 04 prefix byte)
 	h := sha3.NewLegacyKeccak256()
 	h.Write(uncompressed[1:])
 	hash := h.Sum(nil)
+	return hash[12:]
+}
 
-	// Last 20 bytes is the address
-	addr := hash[12:]
-
-	// Convert to bech32
+// PubKeyToAddress converts a secp256k1 public key to a bech32 address (EVM/Ethereum style).
+func PubKeyToAddress(pubKey *secp256k1.PublicKey, prefix string) (string, error) {
+	addr := PubKeyToAddressBytes(pubKey)
 	conv, err := bech32.ConvertBits(addr, 8, 5, true)
 	if err != nil {
 		return "", fmt.Errorf("failed to convert bits: %w", err)
 	}
-
 	return bech32.Encode(prefix, conv)
+}
+
+// PubKeyToEVMAddress returns the Ethereum-style hex address (0x + 40 hex chars).
+func PubKeyToEVMAddress(pubKey *secp256k1.PublicKey) string {
+	return "0x" + hex.EncodeToString(PubKeyToAddressBytes(pubKey))
 }
 
 // Keccak256 computes the Ethereum-compatible keccak256 hash of data.
@@ -191,6 +194,7 @@ func (ks *Keystore) CreateKey(name, mnemonic string, force ...bool) (*Key, error
 	key := &Key{
 		Name:       name,
 		Address:    address,
+		EVMAddress: PubKeyToEVMAddress(pubKey),
 		PubKeyHex:  hex.EncodeToString(pubKey.SerializeCompressed()),
 		PrivKeyEnc: hex.EncodeToString(privKeyEnc),
 		Salt:       hex.EncodeToString(salt),
@@ -239,6 +243,7 @@ func (ks *Keystore) ImportPrivateKey(name, privKeyHex string) (*Key, error) {
 	key := &Key{
 		Name:       name,
 		Address:    address,
+		EVMAddress: PubKeyToEVMAddress(pubKey),
 		PubKeyHex:  hex.EncodeToString(pubKey.SerializeCompressed()),
 		PrivKeyEnc: hex.EncodeToString(privKeyEnc),
 		Salt:       hex.EncodeToString(salt),
@@ -261,6 +266,16 @@ func (ks *Keystore) GetKey(name string) (*Key, error) {
 	var key Key
 	if err := json.Unmarshal(data, &key); err != nil {
 		return nil, fmt.Errorf("failed to parse key: %w", err)
+	}
+
+	// Backward compat: derive EVM address from stored pubkey if missing, then persist.
+	if key.EVMAddress == "" && key.PubKeyHex != "" {
+		if pubKeyBytes, decErr := hex.DecodeString(key.PubKeyHex); decErr == nil {
+			if pubKey, parseErr := secp256k1.ParsePubKey(pubKeyBytes); parseErr == nil {
+				key.EVMAddress = PubKeyToEVMAddress(pubKey)
+				_ = ks.saveKey(&key)
+			}
+		}
 	}
 
 	return &key, nil

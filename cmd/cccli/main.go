@@ -502,7 +502,7 @@ var walletKeysCmd = &cobra.Command{
 
 		fmt.Println("Keys:")
 		for _, k := range keys {
-			fmt.Printf("  %s: %s\n", k.Name, k.Address)
+			fmt.Printf("  %s:\n    Address:     %s\n    EVM Address: %s\n", k.Name, k.Address, k.EVMAddress)
 		}
 		return nil
 	},
@@ -525,8 +525,9 @@ var walletCreateKeyCmd = &cobra.Command{
 		}
 
 		fmt.Printf("Key created successfully!\n\n")
-		fmt.Printf("Name:    %s\n", keyInfo.Name)
-		fmt.Printf("Address: %s\n", keyInfo.Address)
+		fmt.Printf("Name:        %s\n", keyInfo.Name)
+		fmt.Printf("Address:     %s\n", keyInfo.Address)
+		fmt.Printf("EVM Address: %s\n", keyInfo.EVMAddress)
 		fmt.Printf("\n**IMPORTANT** Save your mnemonic phrase (24 words):\n\n")
 		fmt.Printf("  %s\n\n", mnemonic)
 		fmt.Printf("This is the ONLY way to recover your key. Keep it safe and secret!\n")
@@ -571,8 +572,9 @@ Example:
 		}
 
 		fmt.Printf("Key imported successfully!\n\n")
-		fmt.Printf("Name:    %s\n", keyInfo.Name)
-		fmt.Printf("Address: %s\n", keyInfo.Address)
+		fmt.Printf("Name:        %s\n", keyInfo.Name)
+		fmt.Printf("Address:     %s\n", keyInfo.Address)
+		fmt.Printf("EVM Address: %s\n", keyInfo.EVMAddress)
 		return nil
 	},
 }
@@ -609,8 +611,9 @@ Example:
 		}
 
 		fmt.Printf("Private key imported successfully!\n\n")
-		fmt.Printf("Name:    %s\n", keyInfo.Name)
-		fmt.Printf("Address: %s\n", keyInfo.Address)
+		fmt.Printf("Name:        %s\n", keyInfo.Name)
+		fmt.Printf("Address:     %s\n", keyInfo.Address)
+		fmt.Printf("EVM Address: %s\n", keyInfo.EVMAddress)
 		return nil
 	},
 }

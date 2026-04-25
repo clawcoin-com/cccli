@@ -205,9 +205,10 @@ func (w *Wallet) WithdrawReward(ctx context.Context, fromKeyName, validatorAddr 
 
 // KeyInfo represents key information
 type KeyInfo struct {
-	Name    string `json:"name"`
-	Address string `json:"address"`
-	PubKey  string `json:"pubkey"`
+	Name       string `json:"name"`
+	Address    string `json:"address"`
+	EVMAddress string `json:"evm_address"`
+	PubKey     string `json:"pubkey"`
 }
 
 // CreateKey creates a new key with a generated mnemonic
@@ -223,9 +224,10 @@ func (w *Wallet) CreateKey(name string) (*KeyInfo, string, error) {
 	}
 
 	return &KeyInfo{
-		Name:    key.Name,
-		Address: key.Address,
-		PubKey:  key.PubKeyHex,
+		Name:       key.Name,
+		Address:    key.Address,
+		EVMAddress: key.EVMAddress,
+		PubKey:     key.PubKeyHex,
 	}, mnemonic, nil
 }
 
@@ -238,9 +240,10 @@ func (w *Wallet) ImportKey(name, mnemonic string, force ...bool) (*KeyInfo, erro
 	}
 
 	return &KeyInfo{
-		Name:    key.Name,
-		Address: key.Address,
-		PubKey:  key.PubKeyHex,
+		Name:       key.Name,
+		Address:    key.Address,
+		EVMAddress: key.EVMAddress,
+		PubKey:     key.PubKeyHex,
 	}, nil
 }
 
@@ -252,9 +255,10 @@ func (w *Wallet) ImportPrivateKey(name, privKeyHex string) (*KeyInfo, error) {
 	}
 
 	return &KeyInfo{
-		Name:    key.Name,
-		Address: key.Address,
-		PubKey:  key.PubKeyHex,
+		Name:       key.Name,
+		Address:    key.Address,
+		EVMAddress: key.EVMAddress,
+		PubKey:     key.PubKeyHex,
 	}, nil
 }
 
@@ -268,9 +272,10 @@ func (w *Wallet) ListKeys() ([]*KeyInfo, error) {
 	var result []*KeyInfo
 	for _, k := range keys {
 		result = append(result, &KeyInfo{
-			Name:    k.Name,
-			Address: k.Address,
-			PubKey:  k.PubKeyHex,
+			Name:       k.Name,
+			Address:    k.Address,
+			EVMAddress: k.EVMAddress,
+			PubKey:     k.PubKeyHex,
 		})
 	}
 	return result, nil
@@ -284,9 +289,10 @@ func (w *Wallet) GetKey(name string) (*KeyInfo, error) {
 	}
 
 	return &KeyInfo{
-		Name:    key.Name,
-		Address: key.Address,
-		PubKey:  key.PubKeyHex,
+		Name:       key.Name,
+		Address:    key.Address,
+		EVMAddress: key.EVMAddress,
+		PubKey:     key.PubKeyHex,
 	}, nil
 }
 
